@@ -16,9 +16,13 @@ class Packet(object):
         self.new = new
         self.length = len(data)
         self.data = data
-
+        self.valid = True
         # now let subclasses work their magic
-        self.parse()
+        try:
+            self.parse()
+        except:
+            self.valid = False
+
 
     def parse(self):
         '''Perform any parsing necessary to populate fields on this packet.
