@@ -250,6 +250,12 @@ class SignaturePacket(Packet, AlgoLookup):
             raise PgpdumpException("Unsupported signature packet, version %d" %
                     self.sig_version)
 
+        if self.raw_pub_algorithm in (1, 2, 3):
+            self.rsa_signature, offset = get_mpi(self.data, offset)
+        if self.raw_pub_algorithm in (16, 17, 20):
+            self.dsa_r, offset = get_mpi(self.data, offset)
+            self.dsa_s, offset = get_mpi(self.data, offset)
+
         return offset
 
     def parse_subpackets(self, outer_offset, outer_length, hashed=False):
